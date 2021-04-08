@@ -1,0 +1,34 @@
+type Query {
+  users: [User]
+  user(id: ID!): User
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput): User
+
+  updateUserRole(id: Int, isAdmin: Boolean): User
+
+  updateUserPassword(id: Int, password: String): User
+}
+
+type User {
+  id: Int
+  username: String
+  password: String
+  isAdmin: Boolean
+}
+
+input CreateUserInput {
+  username: String
+  password: String
+}
+
+input UpdateUserRoleInput {
+  id: Int
+  isAdmin: Boolean
+}
+
+input UpdateUserPasswordInput {
+  id: Int
+  password: String
+}

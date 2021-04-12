@@ -1,8 +1,8 @@
-import { ParseBoolPipe, ParseIntPipe } from '@nestjs/common';
 import { Query, Args, Mutation, Resolver } from '@nestjs/graphql';
 import { UsersService } from 'src/users/users.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { User } from '../graphql.schema';
+import { User } from './user.schema';
+import { CreateUserInput } from 'src/users/user.input';
+import { FilterQuery } from 'mongoose';
 
 @Resolver('User')
 export class UsersResolver {
@@ -14,38 +14,34 @@ export class UsersResolver {
   }
 
   @Query('user')
-  async findOneById(
-    @Args('id', ParseIntPipe)
-    id: number,
-  ): Promise<User> {
-    return this.usersService.findOneById(id);
+  async findOne(@Args('query') query: FilterQuery<User>) {
+    return this.usersService.findOne(query);
   }
 
   @Mutation('createUser')
-  async create(@Args('createUserInput') args: CreateUserDto): Promise<User> {
-    const createdUser = await this.usersService.create(args);
-    return createdUser;
+  async create(@Args('input') input: CreateUserInput) {
+    return this.usersService.create(input);
   }
 
-  @Mutation('updateUserRole')
-  async updateRole(
-    @Args('id', ParseIntPipe)
-    id: number,
-    @Args('isAdmin', ParseBoolPipe)
-    isAdmin: boolean,
-  ): Promise<User> {
-    const updatedUser = await this.usersService.updateRole(id, isAdmin);
-    return updatedUser;
-  }
-
-  @Mutation('updateUserPassword')
-  async updatePassword(
-    @Args('id', ParseIntPipe)
-    id: number,
-    @Args('password')
-    password: string,
-  ): Promise<User> {
-    const updatedUser = await this.usersService.updatePassword(id, password);
-    return updatedUser;
-  }
+  // @Mutation('updateUserRole')
+  // async updateRole(
+  //   @Args('id', ParseIntPipe)
+  //   id: number,
+  //   @Args('isAdmin', ParseBoolPipe)
+  //   isAdmin: boolean,
+  // ): Promise<User> {
+  //   const updatedUser = await this.usersService.updateRole(id, isAdmin);
+  //   return updatedUser;
+  // }
+  //
+  // @Mutation('updateUserPassword')
+  // async updatePassword(
+  //   @Args('id', ParseIntPipe)
+  //   id: number,
+  //   @Args('password')
+  //   password: string,
+  // ): Promise<User> {
+  //   const updatedUser = await this.usersService.updatePassword(id, password);
+  //   return updatedUser;
+  // }
 }

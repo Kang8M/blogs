@@ -1,34 +1,63 @@
 type Query {
   users: [User]
-  user(id: ID!): User
+  user(query: FindOneUserInput): User
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput): User
+  createUser(input: CreateUserInput): User
 
-  updateUserRole(id: Int, isAdmin: Boolean): User
+#  findOneUser(query: FindOneUserInput): User
 
-  updateUserPassword(id: Int, password: String): User
+#  updateUserRole(id: Int, isAdmin: Boolean): User
+#
+#  updateUserPassword(id: Int, password: String): User
 }
 
 type User {
-  id: Int
+  name: String
   username: String
   password: String
+  email: String
   isAdmin: Boolean
 }
 
 input CreateUserInput {
+  name: String
   username: String
   password: String
-}
-
-input UpdateUserRoleInput {
-  id: Int
+  email: String
   isAdmin: Boolean
 }
 
-input UpdateUserPasswordInput {
-  id: Int
+input FindOneUserInput {
+  name: String
+  username: String
   password: String
+  email: String
+  isAdmin: Boolean
 }
+
+#input FilterQueryWhere {
+#  field: String,
+#  condition: String,
+#  value: String
+#}
+
+#input FilterQueryConditionInput {
+#  eq: Float
+#  gt: Float
+#  gte: Float
+#  lt: Float
+#  lte: Float
+#  between: [Float]
+#}
+
+#input UpdateUserRoleInput {
+#  id: Int
+#  isAdmin: Boolean
+#}
+#
+#input UpdateUserPasswordInput {
+#  id: Int
+#  password: String
+#}

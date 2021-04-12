@@ -9,6 +9,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { OwnersModule } from './owners/owners.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -22,6 +23,10 @@ import { OwnersModule } from './owners/owners.module';
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,
+      definitions: {
+        path: join(process.cwd(), 'src/graphql.schema.ts'),
+        outputAs: 'class',
+      },
     }),
     OwnersModule,
   ],

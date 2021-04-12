@@ -1,44 +1,41 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '../graphql.schema';
+import { Inject, Injectable } from '@nestjs/common';
+import { User } from './user.schema';
+import { Model, FilterQuery } from 'mongoose';
+import { CreateUserInput } from 'src/users/user.input';
 
 @Injectable()
 export class UsersService {
-  private readonly users: Array<User> = [
-    {
-      id: 1,
-      username: 'admin',
-      password: '123456',
-      isAdmin: true,
-    },
-  ];
+  constructor(
+    @Inject('USER_MODEL')
+    private userModel: Model<User>,
+  ) {}
 
-  create(user: User): User {
-    user.id = this.users.length + 1;
-    this.users.push(user);
-    return user;
+  async create(input: CreateUserInput): Promise<User> {
+    return this.userModel.create(input);
   }
 
-  updatePassword(id: number, password: string): User {
-    const user = this.users.find((user) => user.id === id);
-    user.password = password;
-    return user;
+  // async update(
+  //   filter: FilterQuery<User>,
+  //   update: UpdateQuery<User>,
+  // ): Promise<User> {
+  //   return this.userModel.updateOne(filter, update);
+  // }
+
+  // updateRole(id: number, isAdmin: boolean): User {
+  //   const user = this.users.find((user) => user.id === id);
+  //   user.isAdmin = isAdmin;
+  //   return user;
+  // }
+
+  async findAll(): Promise<User[]> {
+    return this.userModel.find().lean();
   }
 
-  updateRole(id: number, isAdmin: boolean): User {
-    const user = this.users.find((user) => user.id === id);
-    user.isAdmin = isAdmin;
-    return user;
+  async findOne(query: FilterQuery<User>): Promise<User> {
+    return this.userModel.findOne(query).exec();
   }
 
-  findAll(): User[] {
-    return this.users;
-  }
-
-  findOneById(id: number): User {
-    return this.users.find((user) => user.id === id);
-  }
-
-  findOneByUserName(username: string): User {
-    return this.users.find((user) => user.username === username);
-  }
+  // findOneByUserName(username: string): User {
+  //   return this.users.find((user) => user.username === username);
+  // }
 }
